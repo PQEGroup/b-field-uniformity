@@ -120,16 +120,19 @@ def get_field_on_axes(magnets, sensor_bounds, is_logscale=True):
     
     # 1. plot the B_z component on each of the three sensor axes
     axs[0].set_ylabel("Gauss")
+    axs[0].set_xlabel("mm")
     axs[0].plot(x_senpos[:, 0], x_Gz)
     axs[0].set_title("x-axis $B_z$ Profile")
     axs[0].grid(color='.9', which='major', axis='both', linestyle='-')
 
     axs[1].set_ylabel("Gauss")
+    axs[1].set_xlabel("mm")
     axs[1].plot(y_senpos[:, 1], y_Gz)
     axs[1].set_title("y-axis $B_z$ Profile")
     axs[1].grid(color='.9', which='major', axis='both', linestyle='-')
 
     axs[2].set_ylabel("Gauss")
+    axs[2].set_xlabel("mm")
     axs[2].plot(z_senpos[:, 2], z_Gz)
     axs[2].set_title("z-axis $B_z$ Profile")
     axs[2].grid(color='.9', which='major', axis='both', linestyle='-')

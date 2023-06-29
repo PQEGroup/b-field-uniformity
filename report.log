@@ -1,0 +1,50 @@
+2023-06-29 14:24:56,937 - pyswarms.single.global_best - INFO - Optimize for 1000 iters with {'c1': 0.5, 'c2': 0.3, 'w': 0.9}
+2023-06-29 14:24:57,692 - pyswarms.single.global_best - INFO - Optimization finished | best cost: 2.5716914790052603e-46, best pos: [-2.32934156e-24 -1.58664210e-23]
+2023-06-29 14:27:23,282 - pyswarms.single.global_best - INFO - Optimize for 1000 iters with {'c1': 0.5, 'c2': 0.3, 'w': 0.9}
+2023-06-29 14:27:53,155 - pyswarms.single.global_best - INFO - Optimize for 1000 iters with {'c1': 0.5, 'c2': 0.3, 'w': 0.9}
+2023-06-29 14:28:39,414 - pyswarms.single.global_best - INFO - Optimize for 1000 iters with {'c1': 0.5, 'c2': 0.3, 'w': 0.9}
+2023-06-29 14:28:54,607 - pyswarms.single.global_best - INFO - Optimize for 1000 iters with {'c1': 0.5, 'c2': 0.3, 'w': 0.9}
+2023-06-29 14:29:00,236 - pyswarms.single.global_best - INFO - Optimize for 1000 iters with {'c1': 0.5, 'c2': 0.3, 'w': 0.9}
+2023-06-29 14:31:03,048 - pyswarms.single.global_best - INFO - Optimize for 1000 iters with {'c1': 0.5, 'c2': 0.3, 'w': 0.9}
+2023-06-29 14:34:08,045 - pyswarms.single.global_best - INFO - Optimization finished | best cost: 6.37344076859382e-06, best pos: [122.63204664   7.41461665  15.18182845 213.92073788]
+2023-06-29 14:35:34,411 - pyswarms.single.global_best - INFO - Optimize for 50 iters with {'c1': 0.4, 'c2': 0.3, 'w': 0.9}
+2023-06-29 14:37:06,975 - pyswarms.single.global_best - INFO - Optimization finished | best cost: 3.0214712285441894e-05, best pos: [ 83.3768546    6.06172896  17.29576172 146.41532661]
+2023-06-29 14:38:46,046 - pyswarms.backend.generators - ERROR - Bounds and/or init_pos should be of size (4,)
+Traceback (most recent call last):
+  File "/opt/homebrew/anaconda3/envs/pqe/lib/python3.11/site-packages/pyswarms/backend/generators.py", line 81, in generate_swarm
+    pos = center * np.random.uniform(
+                   ^^^^^^^^^^^^^^^^^^
+  File "mtrand.pyx", line 1154, in numpy.random.mtrand.RandomState.uniform
+  File "_common.pyx", line 600, in numpy.random._common.cont
+  File "_common.pyx", line 517, in numpy.random._common.cont_broadcast_2
+  File "__init__.pxd", line 741, in numpy.PyArray_MultiIterNew3
+ValueError: shape mismatch: objects cannot be broadcast to a single shape.  Mismatch is between arg 0 with shape (20, 4) and arg 1 with shape (20, 3).
+2023-06-29 14:38:53,962 - pyswarms.single.global_best - INFO - Optimize for 100 iters with {'c1': 0.6, 'c2': 0.3, 'w': 0.9}
+2023-06-29 14:39:30,172 - pyswarms.single.global_best - INFO - Optimization finished | best cost: 7.707541684769875e-06, best pos: [117.192645     6.99320528 203.97032264]
+2023-06-29 14:40:52,798 - pyswarms.single.global_best - INFO - Optimize for 100 iters with {'c1': 0.5, 'c2': 0.3, 'w': 0.9}
+2023-06-29 14:41:29,431 - pyswarms.single.global_best - INFO - Optimization finished | best cost: 7.183161999288053e-06, best pos: [145.201706     9.45966107 253.39602297]
+2023-06-29 14:44:37,052 - pyswarms.single.global_best - INFO - Optimize for 100 iters with {'c1': 0.5, 'c2': 0.3, 'w': 0.9}
+2023-06-29 14:45:13,860 - pyswarms.single.global_best - INFO - Optimization finished | best cost: 4.306766293706912e-06, best pos: [135.63977661   7.46694797 235.67621475]
+2023-06-29 14:47:18,679 - pyswarms.single.global_best - INFO - Optimize for 100 iters with {'c1': 0.5, 'c2': 0.3, 'w': 0.9}
+2023-06-29 14:47:55,222 - pyswarms.single.global_best - INFO - Optimization finished | best cost: 1.6953655430824273e-06, best pos: [129.38182021   6.30488658 224.24946946]
+2023-06-29 15:41:45,374 - pyswarms.single.global_best - INFO - Optimize for 1000 iters with {'c1': 0.5, 'c2': 0.3, 'w': 0.9}
+2023-06-29 15:42:18,421 - pyswarms.single.global_best - INFO - Optimize for 100 iters with {'c1': 0.5, 'c2': 0.3, 'w': 0.9}
+2023-06-29 15:42:22,803 - pyswarms.single.global_best - INFO - Optimization finished | best cost: 0.0023030743459388162, best pos: [ 34.55974463 106.16017215   2.50186913  11.75423674 116.53419261
+ 214.06256204]
+2023-06-29 15:42:35,798 - pyswarms.single.global_best - INFO - Optimize for 1000 iters with {'c1': 0.5, 'c2': 0.3, 'w': 0.9}
+2023-06-29 15:43:44,208 - pyswarms.single.global_best - INFO - Optimize for 1000 iters with {'c1': 0.5, 'c2': 0.3, 'w': 0.9}
+2023-06-29 15:44:22,265 - pyswarms.single.global_best - INFO - Optimize for 100 iters with {'c1': 0.5, 'c2': 0.3, 'w': 0.9}
+2023-06-29 15:45:39,138 - pyswarms.single.global_best - INFO - Optimization finished | best cost: 1.1220244276115834e-05, best pos: [ 56.62516885 101.87572828   5.47524587 126.39973117 126.45088883]
+2023-06-29 15:47:55,203 - pyswarms.single.global_best - INFO - Optimize for 100 iters with {'c1': 0.4, 'c2': 0.3, 'w': 0.9}
+2023-06-29 15:49:04,123 - pyswarms.single.global_best - INFO - Optimization finished | best cost: 4.305077185866929e-06, best pos: [120.22986187  65.28539791   3.28504057 146.15493991 158.3990243 ]
+2023-06-29 15:49:53,383 - pyswarms.single.global_best - INFO - Optimize for 100 iters with {'c1': 0.4, 'c2': 0.3, 'w': 0.9}
+2023-06-29 15:49:54,151 - pyswarms.backend.handlers - ERROR - Unrecognized strategy: {'w': 'exp_decay', 'c1': 'nonlin__mod', 'c2': 'lin_variation'}. Choose one among: ['exp_decay', 'lin_variation', 'nonlin_mod', 'random']
+Traceback (most recent call last):
+  File "/opt/homebrew/anaconda3/envs/pqe/lib/python3.11/site-packages/pyswarms/backend/handlers.py", line 605, in __call__
+    return_opts[opt] = self.strategies[self.strategy[opt]](
+                       ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+KeyError: 'nonlin__mod'
+2023-06-29 15:50:02,090 - pyswarms.single.global_best - INFO - Optimize for 100 iters with {'c1': 0.4, 'c2': 0.3, 'w': 0.9}
+2023-06-29 15:51:08,877 - pyswarms.single.global_best - INFO - Optimization finished | best cost: 2.773353352543778e-06, best pos: [116.6932322   72.9318123    8.41002986 170.74894568 223.16490945]
+2023-06-29 15:52:44,146 - pyswarms.single.global_best - INFO - Optimize for 100 iters with {'c1': 0.4, 'c2': 0.3, 'w': 0.9}
+2023-06-29 15:53:52,935 - pyswarms.single.global_best - INFO - Optimization finished | best cost: 8.645979405751302e-07, best pos: [ 99.55805085  34.55408317   7.06685835 113.94463905 136.68456399]
