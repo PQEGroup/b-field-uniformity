@@ -48,3 +48,20 @@ KeyError: 'nonlin__mod'
 2023-06-29 15:51:08,877 - pyswarms.single.global_best - INFO - Optimization finished | best cost: 2.773353352543778e-06, best pos: [116.6932322   72.9318123    8.41002986 170.74894568 223.16490945]
 2023-06-29 15:52:44,146 - pyswarms.single.global_best - INFO - Optimize for 100 iters with {'c1': 0.4, 'c2': 0.3, 'w': 0.9}
 2023-06-29 15:53:52,935 - pyswarms.single.global_best - INFO - Optimization finished | best cost: 8.645979405751302e-07, best pos: [ 99.55805085  34.55408317   7.06685835 113.94463905 136.68456399]
+2023-06-29 22:14:14,721 - pyswarms.backend.generators - ERROR - Bounds and/or init_pos should be of size (5,)
+Traceback (most recent call last):
+  File "/opt/homebrew/anaconda3/envs/pqe/lib/python3.11/site-packages/pyswarms/backend/generators.py", line 81, in generate_swarm
+    pos = center * np.random.uniform(
+                   ^^^^^^^^^^^^^^^^^^
+  File "mtrand.pyx", line 1154, in numpy.random.mtrand.RandomState.uniform
+  File "_common.pyx", line 600, in numpy.random._common.cont
+  File "_common.pyx", line 517, in numpy.random._common.cont_broadcast_2
+  File "__init__.pxd", line 741, in numpy.PyArray_MultiIterNew3
+ValueError: shape mismatch: objects cannot be broadcast to a single shape.  Mismatch is between arg 0 with shape (20, 5) and arg 1 with shape (20, 3).
+2023-06-29 22:14:17,074 - pyswarms.single.global_best - INFO - Optimize for 100 iters with {'c1': 0.4, 'c2': 0.3, 'w': 0.9}
+2023-06-29 22:14:54,210 - pyswarms.single.global_best - INFO - Optimize for 100 iters with {'c1': 0.5, 'c2': 0.3, 'w': 0.9}
+2023-06-29 22:16:30,982 - pyswarms.single.global_best - INFO - Optimization finished | best cost: 0.0010987257681547278, best pos: [ 39.99864948   4.58454894 183.72265443]
+2023-06-29 22:20:59,304 - pyswarms.single.global_best - INFO - Optimize for 100 iters with {'c1': 0.5, 'c2': 0.3, 'w': 0.9}
+2023-06-29 22:21:56,911 - pyswarms.single.global_best - INFO - Optimize for 100 iters with {'c1': 0.5, 'c2': 0.3, 'w': 0.9}
+2023-06-29 22:23:22,235 - pyswarms.single.global_best - INFO - Optimization finished | best cost: 1.4965751935239722e-05, best pos: [ 41.19644161   1.89524525 209.99684307]
+2023-06-29 23:22:12,987 - pyswarms.single.global_best - INFO - Optimize for 100 iters with {'c1': 0.5, 'c2': 0.3, 'w': 0.9}

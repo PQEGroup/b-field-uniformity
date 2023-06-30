@@ -83,7 +83,15 @@ def plot_plane_field_strength(magnets, x_grid_bounds, y_grid_bounds, z_elev, plo
     fig_base.update_traces(showscale=False)
     fig_base.show()
 
-    
+def get_central_uniform_region_width(Gnon, senpos, threshold):
+    right = left = int(len(Gnon)/2)
+    while (Gnon[left - 1] < threshold):
+        left -= 1
+    while (Gnon[right + 1] < threshold):
+        right += 1
+    width = senpos[right] - senpos[left]
+    return width
+                   
 def get_field_on_axes(magnets, sensor_bounds, is_logscale=True):
     x_sensor_bounds, y_sensor_bounds, z_sensor_bounds = sensor_bounds
     # define sensor axis in 3d space
@@ -164,6 +172,13 @@ def get_field_on_axes(magnets, sensor_bounds, is_logscale=True):
     axs[5].grid(color='.9', which='major', axis='both', linestyle='-')
     axs[5].set_ylim(z_min_nonuniformity - 1e-7, z_max_nonuniformity + 1e-7)
     axs[5].set_title('z-axis $B_z$ Non-uniformity Profile')
+    
+    non_threshold = 1e-6
+    x_reg_width = get_central_uniform_region_width(x_Gnon, x_senpos[:, 0], non_threshold)/10
+    y_reg_width = get_central_uniform_region_width(y_Gnon, y_senpos[:, 1], non_threshold)/10
+    z_reg_width = get_central_uniform_region_width(z_Gnon, z_senpos[:, 2], non_threshold)/10
+    print(f"Uniform region width with threshold {non_threshold}: x = {round(x_reg_width, 3)} cm, y = {round(y_reg_width, 3)} cm, z = {round(z_reg_width, 3)} cm")
+    
     
     magpy.show(magnets, x_sen, y_sen, z_sen, style_magnetization_show=True, backend='plotly')
     sq = 10

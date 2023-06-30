@@ -114,14 +114,16 @@ def two_rings(Br, innerrad, width, thickness, dist, show=False):
 
 
 # define halbach cylinder geometry with noise in angle
-def noisy_halbach_cylinder(Br, c_d, c_h, D, n, mean_cyl_deg, sd_cyl_deg, mean_pos_deg, sd_pos_deg, alternate=False):
-    assert Br > 1e2
+def noisy_halbach_cylinder(mean_Br, sd_Br, c_d, c_h, D, n, mean_cyl_deg, sd_cyl_deg, mean_pos_deg, sd_pos_deg, alternate=False):
+    assert mean_Br > 1e2
     magnets = magpy.Collection()
     if alternate:
         n = 2*n
     for i in range(n):
         d_theta = np.random.default_rng().normal(mean_cyl_deg, sd_cyl_deg)
         d_pos_ang = np.random.default_rng().normal(mean_pos_deg, sd_pos_deg)
+        
+        Br = np.random.default_rng().normal(mean_Br, sd_Br)
         
         theta_i = np.radians(720/n * i + d_theta)
         b_rem = (Br * np.cos(theta_i), Br * np.sin(theta_i), 0)
@@ -135,7 +137,6 @@ def noisy_halbach_cylinder(Br, c_d, c_h, D, n, mean_cyl_deg, sd_cyl_deg, mean_po
             
     magnets.rotate_from_angax(90, 'x')
     magnets.rotate_from_angax(-90, 'y')
-#     magnets.rotate_from_angax(-90, 'z')
     user_defined_style = {
         'show': True,
         "size": 0.1,
