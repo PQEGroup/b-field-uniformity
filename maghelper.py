@@ -1,6 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.ticker as plticker
+import matplotlib.cm as cm
 import magpylib as magpy
 from magpylib.magnet import Cuboid, Cylinder, CylinderSegment
 import plotly.graph_objects as go
@@ -16,9 +17,11 @@ mag_draw_bounds: vertices to define magnet cross section polygon plot
              mag_draw_bounds[i][1] gives list of z-coords of ith polygon vertices
 """
 def make_flux_stream(magnets, x_grid_bounds, z_grid_bounds, mag_draw_bounds):
-    ts_x = np.linspace(x_grid_bounds[0], x_grid_bounds[1], 101)
-    ts_z = np.linspace(z_grid_bounds[0], z_grid_bounds[1], 101)
-    grid = np.array([[(x,0,z) for x in ts_x] for z in ts_z])
+#     ts_x = np.linspace(x_grid_bounds[0], x_grid_bounds[1], 101)
+#     ts_z = np.linspace(z_grid_bounds[0], z_grid_bounds[1], 101)
+#     grid = np.array([[(x,0,z) for x in ts_x] for z in ts_z])
+    grid_res = 101
+    grid, X, Z = make_xz_grid(x_grid_bounds, z_grid_bounds, grid_res)
     
     #get magnetic field
     B = magnets.getB(grid)
@@ -31,6 +34,8 @@ def make_flux_stream(magnets, x_grid_bounds, z_grid_bounds, mag_draw_bounds):
     #plot coil cross section
     for poly in mag_draw_bounds:
         ax1.plot(poly[0], poly[1],'k--')
+    ax1.set_ylabel("mm")
+    ax1.set_xlabel("mm")
 
         
 """
@@ -83,6 +88,26 @@ def plot_plane_field_strength(magnets, x_grid_bounds, y_grid_bounds, z_elev, plo
     fig_base.update_traces(showscale=False)
     fig_base.show()
 
+def plot_uniform_region_side_view(magnets, grid_bounds_1, grid_bounds_2, view='xz', contour_res = 1000, discrete_levels = 12, lvls = [[1e-7], [1e-6]], grid_res = 501):
+    grid = i0 = i1 = 0
+    if view == 'xz':
+        grid, i0, i1 = make_xz_grid(grid_bounds_1, grid_bounds_2, grid_res)
+    if view == 'xy':
+        grid, i0, i1 = make_xy_grid(grid_bounds_1, grid_bounds_2, grid_res)
+        
+    Gmag, Gnon, Gcenter, av_nonuniformity, max_nonuniformity = get_grid_mag_and_nonuniformity(magnets, grid, grid_res)
+    plt.figure(figsize=(7,7))
+    plt.gca().set_aspect('equal')
+    bgc0 = plt.contourf(i0, i1, Gmag, levels=contour_res, cmap=cm.plasma)
+    cp0 = plt.contour(i0, i1, Gmag, levels=discrete_levels, colors='black')
+    plt.clabel(cp0, fontsize=10, colors='black')
+    plt.colorbar(bgc0)
+   
+    cp1 = plt.contour(i0, i1, Gnon, levels=lvls[0], colors='white', linestyles='dashed')
+    cp2 = plt.contour(i0, i1, Gnon, levels=lvls[1], colors='white', linestyles='dotted')
+    plt.ylabel("mm")
+    plt.xlabel("mm")
+    
 def get_central_uniform_region_width(Gnon, senpos, threshold):
     right = left = int(len(Gnon)/2)
     while (Gnon[left - 1] < threshold):
@@ -162,22 +187,25 @@ def get_field_on_axes(magnets, sensor_bounds, is_logscale=True):
     axs[3].grid(color='.9', which='major', axis='both', linestyle='-')
     axs[3].set_ylim(x_min_nonuniformity - 1e-7, x_max_nonuniformity + 1e-7)
     axs[3].set_title('x-axis $B_z$ Non-uniformity Profile')
+    axs[3].set_xlabel("mm")
     
     axs[4].plot(y_senpos[:, 1], y_Gnon)
     axs[4].grid(color='.9', which='major', axis='both', linestyle='-')
     axs[4].set_ylim(y_min_nonuniformity - 1e-7, y_max_nonuniformity + 1e-7)
     axs[4].set_title('y-axis $B_z$ Non-uniformity Profile')
+    axs[4].set_xlabel("mm")
     
     axs[5].plot(z_senpos[:, 2], z_Gnon)
     axs[5].grid(color='.9', which='major', axis='both', linestyle='-')
     axs[5].set_ylim(z_min_nonuniformity - 1e-7, z_max_nonuniformity + 1e-7)
     axs[5].set_title('z-axis $B_z$ Non-uniformity Profile')
+    axs[5].set_xlabel("mm")
     
-    non_threshold = 1e-6
-    x_reg_width = get_central_uniform_region_width(x_Gnon, x_senpos[:, 0], non_threshold)/10
-    y_reg_width = get_central_uniform_region_width(y_Gnon, y_senpos[:, 1], non_threshold)/10
-    z_reg_width = get_central_uniform_region_width(z_Gnon, z_senpos[:, 2], non_threshold)/10
-    print(f"Uniform region width with threshold {non_threshold}: x = {round(x_reg_width, 3)} cm, y = {round(y_reg_width, 3)} cm, z = {round(z_reg_width, 3)} cm")
+#     non_threshold = 1e-6
+#     x_reg_width = get_central_uniform_region_width(x_Gnon, x_senpos[:, 0], non_threshold)/10
+#     y_reg_width = get_central_uniform_region_width(y_Gnon, y_senpos[:, 1], non_threshold)/10
+#     z_reg_width = get_central_uniform_region_width(z_Gnon, z_senpos[:, 2], non_threshold)/10
+#     print(f"Uniform region width with threshold {non_threshold}: x = {round(x_reg_width, 3)} cm, y = {round(y_reg_width, 3)} cm, z = {round(z_reg_width, 3)} cm")
     
     
     magpy.show(magnets, x_sen, y_sen, z_sen, style_magnetization_show=True, backend='plotly')
@@ -317,17 +345,58 @@ def make_grid(x_grid_bounds, y_grid_bounds, grid_res):
     grid = np.array([[(x,y,0) for x in ts_x] for y in ts_y])
     return grid
 
-# returns
-# - sum total nonuniformity over grid
-# - center b-field
-# - average nonuniformity over grid area
-def get_grid_nonuniformity(magnets, grid, grid_res):
+def make_xy_grid(x_grid_bounds, y_grid_bounds, grid_res):
+    grid = make_grid(x_grid_bounds, y_grid_bounds, grid_res)
+    return grid
+
+def make_xz_grid(x_grid_bounds, z_grid_bounds, grid_res):
+    ts_x = np.linspace(x_grid_bounds[0], x_grid_bounds[1], grid_res)
+    ts_z = np.linspace(z_grid_bounds[0], z_grid_bounds[1], grid_res)
+    grid = np.array([[(x,0,z) for x in ts_x] for z in ts_z])
+    return grid, ts_x, ts_z
+
+def make_xyz_grid(x_grid_bounds, y_grid_bounds, z_grid_bounds, grid_res):
+    ts_x = np.linspace(x_grid_bounds[0], x_grid_bounds[1], grid_res)
+    ts_y = np.linspace(y_grid_bounds[0], y_grid_bounds[1], grid_res)
+    ts_z = np.linspace(z_grid_bounds[0], z_grid_bounds[1], grid_res)
+    grid = np.array([[[(x,y,z) for x in ts_x] for y in ts_y]for z in ts_z])
+    return grid, ts_x, ts_y, ts_z 
+
+def get_cuboid_nonuniformity_coverage(magnets, x_grid_bounds, y_grid_bounds, z_grid_bounds, grid_res=201):
+    grid, X, Y, Z = make_xyz_grid(x_grid_bounds, y_grid_bounds, z_grid_bounds, grid_res)
+    B = magpy.getB(magnets, grid)
+    Bmag = np.linalg.norm(B, axis=3)
+    c = int(grid_res/2)
+    nonun = np.abs((Bmag - Bmag[c,c,c]) / Bmag[c,c,c])
+    
+    # Count volume of enclosed uniform area
+    p_uni = np.count_nonzero(nonun < 1e-6)
+    # Volume of box defined by bounds
+    p_cuboid = nonun.size
+    
+    p_ratio = p_uni / p_cuboid
+    
+    # Get lengths of bounding cuboid
+    region_x = np.abs(x_grid_bounds[0] - x_grid_bounds[1])
+    region_y = np.abs(y_grid_bounds[0] - y_grid_bounds[1])
+    region_z = np.abs(z_grid_bounds[0] - z_grid_bounds[1])
+    
+    v_cuboid = region_x * region_y * region_z
+    v_uni = p_ratio * v_cuboid
+    
+    # Print results
+    print(f"Proportion of uniform region (<1e-6) in central {region_x} * {region_y} * {region_z} = {v_cuboid} mm^3: {round(p_ratio * 100, 3)}%")
+    print(f"Volume of uniform region (<1e-6): {round(v_uni, 3)} mm^3 = {round(v_uni/1000, 3)} cm^3")
+    return v_uni
+
+def get_grid_mag_and_nonuniformity(magnets, grid, grid_res):
     mT_to_G = 10
     B = magnets.getB(grid)
     G = B * mT_to_G
     # find magnitude of the b-field at all points over grid
+    Gmag = np.linalg.norm(G, axis=2)
 #     Gmag = np.sqrt(G[:,:,0]**2 + G[:,:,1]**2 + G[:,:,2]**2)
-    Gmag = G[:,:,2]
+#     Gmag = G[:,:,2]
     # find magnitude of b-field at center of grid
     mid_id = int(grid_res/2)
     Gcenter = Gmag[mid_id][mid_id]
@@ -335,4 +404,15 @@ def get_grid_nonuniformity(magnets, grid, grid_res):
     Gnon = np.abs((Gmag - Gcenter)/Gcenter)
     max_nonuniformity = np.max(Gnon)
     av_nonuniformity = np.sum(Gnon) / grid_res**2
+    return Gmag, Gnon, Gcenter, av_nonuniformity, max_nonuniformity
+
+# returns
+# - sum total nonuniformity over grid
+# - center b-field
+# - average nonuniformity over grid area
+def get_grid_nonuniformity(magnets, grid, grid_res):
+    Gmag, Gnon, Gcenter, av_nonuniformity, max_nonuniformity = get_grid_mag_and_nonuniformity(magnets, grid, grid_res)
     return Gnon, Gcenter, av_nonuniformity, max_nonuniformity
+
+
+
