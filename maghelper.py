@@ -1,4 +1,5 @@
 import numpy as np
+import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib.ticker as plticker
 import matplotlib.cm as cm
@@ -37,6 +38,78 @@ def make_flux_stream(magnets, x_grid_bounds, z_grid_bounds, mag_draw_bounds):
     ax1.set_ylabel("mm")
     ax1.set_xlabel("mm")
 
+def make_opt_res2_csv(name, nonun, g_center, x, fun):
+    r_f = np.array([fun])
+    r_n = np.array([nonun])
+    r_gc = np.array([g_center])
+    r_x = np.array(x)
+
+    a = np.concatenate((r_n.T, r_gc.T, r_x, r_f.T), axis=1)
+    b = a[a[:, 0].argsort()]
+
+    columns = ['nonuniformity', 'center_field_gauss']
+    n = int(b.shape[1]) - len(columns)
+    # need 4 specs to define a ring: innerrad, width, thickness, dist
+    n_ring_sets = int(n/ 4)
+    
+    for i in range(1, n_ring_sets+1):
+        columns.append('r_' + str(i) + '_innerrad')
+        columns.append('r_' + str(i) + '_width')
+        columns.append('r_' + str(i) + '_thickness')
+        columns.append('r_' + str(i) + '_dist')
+    
+    columns.append('objective')
+    
+    columns = np.array(columns)
+    b_df = pd.DataFrame(b, columns = columns)
+    
+    c = np.concatenate((r_n.T, r_x), axis=1)
+    new_array = [tuple(row) for row in c]
+    u = np.unique(new_array, axis=0)
+    n_unique = len(u)
+    print('Number of unique results:', n_unique)
+    print(b_df)
+    b_df.to_csv(name + str(n_unique) + '.csv')
+    return b, b_df
+    
+def make_opt_res_csv(name, fun, g_center, x, guesses):
+    r_f = np.array([fun])
+    r_g = np.array(guesses)
+    r_gc = np.array([g_center])
+    r_x = np.array(x)
+
+    a = np.concatenate((r_f.T, r_gc.T, r_x, r_g), axis=1)
+    b = a[a[:, 0].argsort()]
+
+    columns = ['nonuniformity', 'center_field_gauss']
+    n = int(b.shape[1]) - len(columns)
+    # need 4 specs to define a ring: innerrad, width, thickness, dist
+    # n = n_ring_sets * 2 (1 result set, 1 guess set) * 4 (n_specs)
+    n_ring_sets = int(n/ 4 /2)
+    
+    for i in range(1, n_ring_sets+1):
+        columns.append('r_' + str(i) + '_innerrad')
+        columns.append('r_' + str(i) + '_width')
+        columns.append('r_' + str(i) + '_thickness')
+        columns.append('r_' + str(i) + '_dist')
+    
+    for i in range(1, n_ring_sets+1):
+        columns.append('g_' + str(i) + '_innerrad')
+        columns.append('g_' + str(i) + '_width')
+        columns.append('g_' + str(i) + '_thickness')
+        columns.append('g_' + str(i) + '_dist')
+    
+    columns = np.array(columns)
+    b_df = pd.DataFrame(b, columns = columns)
+    
+    c = np.concatenate((r_f.T, r_x), axis=1)
+    new_array = [tuple(row) for row in c]
+    u = np.unique(new_array, axis=0)
+    n_unique = len(u)
+    print('Number of unique results:', n_unique)
+    print(b_df)
+    b_df.to_csv(name + str(n_unique) + '.csv')
+    return b, b_df
         
 """
 Generates plot of Bz strength in specified plane.
@@ -389,12 +462,16 @@ def get_cuboid_nonuniformity_coverage(magnets, x_grid_bounds, y_grid_bounds, z_g
     print(f"Volume of uniform region (<1e-6): {round(v_uni, 3)} mm^3 = {round(v_uni/1000, 3)} cm^3")
     return v_uni
 
-def get_grid_mag_and_nonuniformity(magnets, grid, grid_res):
+def get_grid_mag_and_nonuniformity(magnets, grid, grid_res, use_z=False):
     mT_to_G = 10
     B = magnets.getB(grid)
     G = B * mT_to_G
     # find magnitude of the b-field at all points over grid
-    Gmag = np.linalg.norm(G, axis=2)
+    Gmag = 0
+    if use_z:
+        Gmag = G[:,:,2]
+    else:
+        Gmag = np.linalg.norm(G, axis=2)
 #     Gmag = np.sqrt(G[:,:,0]**2 + G[:,:,1]**2 + G[:,:,2]**2)
 #     Gmag = G[:,:,2]
     # find magnitude of b-field at center of grid
@@ -410,8 +487,8 @@ def get_grid_mag_and_nonuniformity(magnets, grid, grid_res):
 # - sum total nonuniformity over grid
 # - center b-field
 # - average nonuniformity over grid area
-def get_grid_nonuniformity(magnets, grid, grid_res):
-    Gmag, Gnon, Gcenter, av_nonuniformity, max_nonuniformity = get_grid_mag_and_nonuniformity(magnets, grid, grid_res)
+def get_grid_nonuniformity(magnets, grid, grid_res, use_z=False):
+    Gmag, Gnon, Gcenter, av_nonuniformity, max_nonuniformity = get_grid_mag_and_nonuniformity(magnets, grid, grid_res, use_z)
     return Gnon, Gcenter, av_nonuniformity, max_nonuniformity
 
 

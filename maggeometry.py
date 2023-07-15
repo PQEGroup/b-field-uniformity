@@ -61,6 +61,32 @@ def halbach_cylinder(Br, c_d, c_h, D, n, alternate=False):
 #     magpy.show(magnets, style_magnetization_show=True, backend='plotly')
     return magnets
 
+# parameters
+# ring_specs: a 2D array containing dimensions to specify each ring
+# each element of dims is [Br, mag_dir, innerrad, width, thickness, dist, mirror_z]
+# Br given in mT
+# mag_dir is a tuple representing a normalized vector specifying magnetization direction
+# mirror is a boolean to create a mirrored ring pair about the z=0 axis
+def n_rings(ring_specs, show=False):
+    magnets = magpy.Collection()
+    for ring_spec in ring_specs:
+        Br, mag_dir, mirror_z, innerrad, width, thickness, dist = ring_spec
+        magnetization = tuple(Br * axis for axis in mag_dir)
+        ring = CylinderSegment(magnetization=magnetization,
+                              dimension=(innerrad, innerrad + width, thickness,0, 360),
+                              position=(0, 0, dist)
+                              )
+        magnets.add(ring)
+        if mirror_z:
+            ring2 = CylinderSegment(magnetization=magnetization,
+                              dimension=(innerrad, innerrad + width, thickness,0, 360),
+                              position=(0, 0, -dist)
+                              )
+            magnets.add(ring2)
+    if show:
+        magpy.show(magnets, style_magnetization_show=True, backend='plotly')
+    return magnets
+
 def four_rings(Br, innerrad1, innerrad2, width, thickness, dist1, dist2, show=False):
     assert Br > 1e2
     magnets = magpy.Collection()
@@ -112,6 +138,42 @@ def two_rings(Br, innerrad, width, thickness, dist, show=False):
         magpy.show(magnets, backend='plotly')
     return magnets
 
+def noisy_rings(mean_Br, sd_Br, ring_set_position, N_seg, show=False):
+    assert mean_Br > 1e2
+    magnets = magpy.Collection()
+    angle = 360/N_seg
+    for pos in ring_set_position:
+        ring_top = magpy.Collection()
+        ring_bot = magpy.Collection()
+        innerrad, width, thickness, dist = pos
+        for i in range(N_seg):
+            Br_top = np.random.default_rng().normal(mean_Br, sd_Br)
+            ring_top += CylinderSegment(magnetization=(0, 0, Br_top),
+                                       dimension=(innerrad, innerrad + width, thickness, i*angle, (i+1)*angle),
+                                       position = (0, 0, +dist))
+            Br_bot = np.random.default_rng().normal(mean_Br, sd_Br)
+            ring_bot += CylinderSegment(magnetization=(0, 0, Br_bot),
+                                       dimension=(innerrad, innerrad + width, thickness, i*angle, (i+1)*angle),
+                                       position = (0, 0, -dist))
+            
+        magnets.add(ring_top).add(ring_bot)
+#     .add(ring_bot)
+#     user_defined_style = {
+#         'show': True,
+#         "size": 0.1,
+#         'color': {
+#             'transition': 0,
+#             'mode': 'tricolor',
+#             'middle': 'white',
+#             'north': 'magenta',
+#             'south': 'turquoise',
+#         },
+#         "mode": "arrow+color",
+#     }
+#     magpy.defaults.display.style.magnet.magnetization = user_defined_style
+    if show:
+        magpy.show(magnets, backend='plotly')
+    return magnets
 
 # define halbach cylinder geometry with noise in angle
 def noisy_halbach_cylinder(mean_Br, sd_Br, c_d, c_h, D, n, mean_cyl_deg, sd_cyl_deg, mean_pos_deg, sd_pos_deg, alternate=False):
