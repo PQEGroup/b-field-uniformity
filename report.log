@@ -65,3 +65,49 @@ ValueError: shape mismatch: objects cannot be broadcast to a single shape.  Mism
 2023-06-29 22:21:56,911 - pyswarms.single.global_best - INFO - Optimize for 100 iters with {'c1': 0.5, 'c2': 0.3, 'w': 0.9}
 2023-06-29 22:23:22,235 - pyswarms.single.global_best - INFO - Optimization finished | best cost: 1.4965751935239722e-05, best pos: [ 41.19644161   1.89524525 209.99684307]
 2023-06-29 23:22:12,987 - pyswarms.single.global_best - INFO - Optimize for 100 iters with {'c1': 0.5, 'c2': 0.3, 'w': 0.9}
+2023-07-17 17:51:09,971 - pyswarms.backend.generators - ERROR - Bounds and/or init_pos should be of size (5,)
+Traceback (most recent call last):
+  File "/opt/homebrew/anaconda3/envs/pqe/lib/python3.11/site-packages/pyswarms/backend/generators.py", line 81, in generate_swarm
+    pos = center * np.random.uniform(
+                   ^^^^^^^^^^^^^^^^^^
+  File "mtrand.pyx", line 1154, in numpy.random.mtrand.RandomState.uniform
+  File "_common.pyx", line 600, in numpy.random._common.cont
+  File "_common.pyx", line 517, in numpy.random._common.cont_broadcast_2
+  File "__init__.pxd", line 741, in numpy.PyArray_MultiIterNew3
+ValueError: shape mismatch: objects cannot be broadcast to a single shape.  Mismatch is between arg 0 with shape (20, 5) and arg 1 with shape (20, 8).
+2023-07-17 17:51:16,870 - pyswarms.single.global_best - INFO - Optimize for 100 iters with {'c1': 0.4, 'c2': 0.3, 'w': 0.9}
+2023-07-17 17:53:03,661 - pyswarms.single.global_best - INFO - Optimize for 100 iters with {'c1': 0.4, 'c2': 0.3, 'w': 0.9}
+2023-07-17 17:56:41,457 - pyswarms.single.global_best - INFO - Optimize for 100 iters with {'c1': 0.4, 'c2': 0.3, 'w': 0.9}
+2023-07-17 17:57:43,659 - pyswarms.single.global_best - INFO - Optimize for 100 iters with {'c1': 0.4, 'c2': 0.3, 'w': 0.9}
+2023-07-17 17:58:19,141 - pyswarms.single.global_best - INFO - Optimize for 100 iters with {'c1': 0.4, 'c2': 0.3, 'w': 0.9}
+2023-07-17 17:58:46,520 - pyswarms.single.global_best - INFO - Optimize for 100 iters with {'c1': 0.4, 'c2': 0.3, 'w': 0.9}
+2023-07-17 17:59:38,234 - pyswarms.single.global_best - INFO - Optimize for 100 iters with {'c1': 0.4, 'c2': 0.3, 'w': 0.9}
+2023-07-17 18:01:26,538 - pyswarms.single.global_best - INFO - Optimize for 100 iters with {'c1': 0.4, 'c2': 0.3, 'w': 0.9}
+2023-07-17 18:02:26,118 - pyswarms.single.global_best - INFO - Optimize for 100 iters with {'c1': 0.4, 'c2': 0.3, 'w': 0.9}
+2023-07-17 18:03:22,153 - pyswarms.single.global_best - INFO - Optimize for 100 iters with {'c1': 0.4, 'c2': 0.3, 'w': 0.9}
+2023-07-17 18:07:57,246 - pyswarms.single.global_best - INFO - Optimize for 100 iters with {'c1': 0.4, 'c2': 0.3, 'w': 0.9}
+2023-07-17 18:09:14,439 - pyswarms.single.global_best - INFO - Optimize for 50 iters with {'c1': 0.4, 'c2': 0.3, 'w': 0.9}
+2023-07-17 18:09:49,506 - pyswarms.single.global_best - INFO - Optimization finished | best cost: 5.494366989694676e-09, best pos: [137.23175772  14.79069525   9.43156003 287.82702006  43.52310635
+   5.77198159   2.97798092 267.9706147 ]
+2023-07-17 22:24:34,054 - pyswarms.single.global_best - INFO - Optimize for 50 iters with {'c1': 0.4, 'c2': 0.3, 'w': 0.9}
+2023-07-17 22:25:08,081 - pyswarms.single.global_best - INFO - Optimization finished | best cost: 0.0008987053783063015, best pos: [100.42507276   5.58878031   4.47866221 169.4438369   52.52052184
+   8.6993659    6.30149606 212.60049952]
+2023-07-17 22:25:25,415 - pyswarms.single.global_best - INFO - Optimize for 50 iters with {'c1': 0.4, 'c2': 0.3, 'w': 0.9}
+2023-07-17 22:26:53,364 - pyswarms.single.global_best - INFO - Optimization finished | best cost: 0.012623855198541584, best pos: [100.11607018  15.14303505   6.38653441  49.28642461  61.59141873
+  11.36348025  16.03990955 206.06016472]
+2023-07-17 22:35:56,731 - pyswarms.single.global_best - INFO - Optimize for 50 iters with {'c1': 0.4, 'c2': 0.6, 'w': 0.7}
+2023-07-17 22:35:58,555 - pyswarms.backend.handlers - ERROR - Unrecognized strategy: {'w': 'exp_decay', 'c1': 'random', 'c2': 'lin_variation'}. Choose one among: ['exp_decay', 'lin_variation', 'nonlin_mod', 'random']
+Traceback (most recent call last):
+  File "/opt/homebrew/anaconda3/envs/pqe/lib/python3.11/site-packages/pyswarms/backend/handlers.py", line 605, in __call__
+    return_opts[opt] = self.strategies[self.strategy[opt]](
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/anaconda3/envs/pqe/lib/python3.11/site-packages/pyswarms/backend/handlers.py", line 694, in random
+    if opt in kwargs["end_opts"]:
+              ~~~~~~^^^^^^^^^^^^
+KeyError: 'end_opts'
+2023-07-17 22:38:27,949 - pyswarms.single.global_best - INFO - Optimize for 50 iters with {'c1': 0.4, 'c2': 0.6, 'w': 0.7}
+2023-07-17 22:39:57,638 - pyswarms.single.global_best - INFO - Optimization finished | best cost: 0.004917366551358315, best pos: [118.5218298   11.67716941   7.59339867  56.39590335  83.53854963
+  15.47820265  17.32643168 212.82106595]
+2023-07-17 22:40:41,990 - pyswarms.single.global_best - INFO - Optimize for 50 iters with {'c1': 0.4, 'c2': 0.6, 'w': 0.7}
+2023-07-17 22:42:13,323 - pyswarms.single.global_best - INFO - Optimization finished | best cost: 4.545093223877496e-06, best pos: [ 56.50066107  12.36335622  12.91406919 181.88438696 101.9458333
+  11.37309837  12.30344958 142.5841357 ]
