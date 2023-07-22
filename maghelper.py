@@ -128,7 +128,8 @@ def plot_plane_field_strength(magnets, x_grid_bounds, y_grid_bounds, z_elev, plo
     # ax = plt.figure().add_subplot(projection='3d')
     # surf = ax.plot_surface(grid[:,:,0], grid[:,:,1], B[:,:,2], linewidth=0)
     
-    Gz = G[:,:,2]
+#     Gz = G[:,:,2]
+    Gmag = np.linalg.norm(G, axis=2)
     
     fig_base = make_subplots(rows=1, cols=2,
                              specs=[[{'type': 'surface'}, {'type': 'surface'}]],
@@ -139,15 +140,17 @@ def plot_plane_field_strength(magnets, x_grid_bounds, y_grid_bounds, z_elev, plo
                             )
     
     fig_base.add_trace(
-        go.Surface(x=grid[:,:,0], y=grid[:,:,1], z=Gz),
+        go.Surface(x=grid[:,:,0], y=grid[:,:,1], z=Gmag),
         row=1, col=1
     )
     
     if plot_nonuniformity:
         mid_idx = int(len(ts_x)/2)
         mid_idy = int(len(ts_y)/2)
-        G_center = Gz[mid_idx][mid_idy]
-        G_non = np.abs((Gz - G_center)/G_center) * 100
+        G_center = Gmag[mid_idx][mid_idy]
+        G_non = np.abs((Gmag - G_center)/G_center)
+#         G_center = Gz[mid_idx][mid_idy]
+#         G_non = np.abs((Gz - G_center)/G_center)
         
         fig_base.add_trace(
             go.Surface(x=grid[:,:,0], y=grid[:,:,1], z=G_non),
@@ -435,7 +438,7 @@ def make_xyz_grid(x_grid_bounds, y_grid_bounds, z_grid_bounds, grid_res):
     grid = np.array([[[(x,y,z) for x in ts_x] for y in ts_y]for z in ts_z])
     return grid, ts_x, ts_y, ts_z 
 
-def get_cuboid_nonuniformity_coverage(magnets, x_grid_bounds, y_grid_bounds, z_grid_bounds, grid_res=201):
+def get_cuboid_nonuniformity_coverage(magnets, x_grid_bounds, y_grid_bounds, z_grid_bounds, grid_res=201, threshold=1e-7):
     grid, X, Y, Z = make_xyz_grid(x_grid_bounds, y_grid_bounds, z_grid_bounds, grid_res)
     B = magpy.getB(magnets, grid)
     Bmag = np.linalg.norm(B, axis=3)
@@ -443,7 +446,7 @@ def get_cuboid_nonuniformity_coverage(magnets, x_grid_bounds, y_grid_bounds, z_g
     nonun = np.abs((Bmag - Bmag[c,c,c]) / Bmag[c,c,c])
     
     # Count volume of enclosed uniform area
-    p_uni = np.count_nonzero(nonun < 1e-6)
+    p_uni = np.count_nonzero(nonun < threshold)
     # Volume of box defined by bounds
     p_cuboid = nonun.size
     
@@ -458,8 +461,8 @@ def get_cuboid_nonuniformity_coverage(magnets, x_grid_bounds, y_grid_bounds, z_g
     v_uni = p_ratio * v_cuboid
     
     # Print results
-    print(f"Proportion of uniform region (<1e-6) in central {region_x} * {region_y} * {region_z} = {v_cuboid} mm^3: {round(p_ratio * 100, 3)}%")
-    print(f"Volume of uniform region (<1e-6): {round(v_uni, 3)} mm^3 = {round(v_uni/1000, 3)} cm^3")
+    print(f"Proportion of uniform region ({threshold}) in central {region_x} * {region_y} * {region_z} = {v_cuboid} mm^3: {round(p_ratio * 100, 3)}%")
+    print(f"Volume of uniform region ({threshold}): {round(v_uni, 3)} mm^3 = {round(v_uni/1000, 3)} cm^3")
     return v_uni
 
 def get_grid_mag_and_nonuniformity(magnets, grid, grid_res, use_z=False):
